@@ -1,0 +1,64 @@
+<html><head>
+	       <style>
+	           #but1 {  width: 100px;
+	           	        height: 50px;
+                       display: block;
+                       background: blue;
+	                 }
+	            div.menu1{
+	            	position: relative;
+	            	width: 98px;
+	            	height:  50px;
+	            	display: none;
+	            	background-color: red;
+	            	border: solid 1px black ;
+	            	margin-left: 0;
+	            }
+	            #menu{
+	            	position: relative;
+	            	display: inline-block;
+	            	float: left;
+	            	margin-left: 0;
+	            }
+	       </style>
+	       <script>
+
+	       	function show()
+                  {  
+                  	var s1 = document.getElementById("menu");
+                  	var s = s1.getElementsByTagName("div");
+                  	for (var i=0; i < s.length; i++ ){
+		                  	if( s[i].style.display == 'none')
+		                  		 {
+		                  		 	
+		                  		 s[i].style.display = 'block';
+		                  		 }
+								   else 
+								   	{  
+								   	 s[i].style.display = 'none';
+								      }
+						      }
+						}
+		
+				window.onload = function()
+		      {    
+					show();	 
+				};
+		   </script>
+
+	</head>
+	<body>
+		<div>
+			
+			<div id="menu" onmouseover="show()" onmouseout="show()">
+			   <button type="button" id="but1" >
+			   </button> 
+				<div class="menu1" ">oh</div>
+				<div class="menu1" ">my</div>
+				<div class="menu1" ">god</div>
+			</div>
+			
+		</div>
+	
+
+</body></html>
