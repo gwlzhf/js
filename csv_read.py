@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 
 
 test_data = pd.read_csv("test.csv")
-pixel = np.matrix(test_data.iloc[10:,0:],dtype=np.uint8)
+pixel = np.matrix(test_data.iloc[0:10,0:])
 
-for i in range(10):
+for i in range(9):
     image_matrix = np.reshape(pixel[i],[28,28])
-    image = Image.fromarray(image_matrix)
+    image = Image.fromarray(image_matrix.astype(np.uint8))
     plt.imshow(image,cmap=plt.cm.gray,interpolation='nearest')
     plt.show()
 
