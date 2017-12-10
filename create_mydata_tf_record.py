@@ -1,9 +1,8 @@
 r"""Convert raw PASCAL dataset to TFRecord for object_detection.
 
 Example usage:
-    ./create_pascal_tf_record --data_dir=/home/user/VOCdevkit \
-        --year=VOC2012 \
-        --output_path=/home/user/pascal.record
+    ./create_pascal_tf_record --data_dir=/lhc_record2017 \
+        --output_path=/lhc_record2017/TFRecord/train.record
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -14,37 +13,36 @@ import io
 import logging
 import os
 
-from xml import etree
+from lxml import etree
 import PIL.Image
 import tensorflow as tf
-
+import sys
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 
 
 flags = tf.app.flags
-flags.DEFINE_string('data_dir', '', 'Root directory to raw PASCAL VOC dataset.')
-flags.DEFINE_string('set', 'train', 'Convert training set, validation set or '
-                    'merged set.')
+flags.DEFINE_string('data_dir', os.getcwd() + '/lhc_record2017', 'Root directory to raw PASCAL VOC dataset.')
+flags.DEFINE_string('set', 'train', 'Convert training set, validation set or merged set.')
 flags.DEFINE_string('annotations_dir', 'Annotations',
                     '(Relative) path to annotations directory.')
 #flags.DEFINE_string('year', 'VOC2007', 'Desired challenge year.')
-flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
-flags.DEFINE_string('label_map_path', 'data/pascal_label_map.pbtxt',
+flags.DEFINE_string('output_path', os.getcwd() + '/lhc_record2017/TFRecord/train.record', 'Path to output TFRecord')
+flags.DEFINE_string('label_map_path', os.getcwd() + '/lhc_record2017/label_map/label_map.pbtxt',
                     'Path to label map proto')
 flags.DEFINE_boolean('ignore_difficult_instances', False, 'Whether to ignore '
                      'difficult instances')
 FLAGS = flags.FLAGS
 
-SETS = ['train', 'val', 'trainval', 'test']
-YEARS = ['VOC2007', 'VOC2012', 'merged']
+SETS = ['train', 'eval']
+#YEARS = ['VOC2007', 'VOC2012', 'merged']
 
 
 def dict_to_tf_example(data,
                        dataset_directory,
                        label_map_dict,
                        ignore_difficult_instances=False,
-                       image_subdirectory='JPEGImages'):
+                       image_subdirectory='images'):
   """Convert XML derived dict to tf.Example proto.
 
   Notice that this function normalizes the bounding box coordinates provided
@@ -66,8 +64,8 @@ def dict_to_tf_example(data,
   Raises:
     ValueError: if the image pointed to by data['filename'] is not a valid JPEG
   """
-  img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
-  full_path = os.path.join(dataset_directory, img_path)
+  img_path = os.path.join(dataset_directory, image_subdirectory, data['filename'])
+  full_path = os.path.join('', img_path)
   with tf.gfile.GFile(full_path, 'rb') as fid:
     encoded_jpg = fid.read()
   encoded_jpg_io = io.BytesIO(encoded_jpg)
@@ -144,8 +142,8 @@ def main(_):
 
   #for year in years:
   #logging.info('Reading from PASCAL %s dataset.', year)
-  examples_path = os.path.join(data_dir,FLAGS.set + '.txt')
-  annotations_dir = os.path.join(data_dir, year, FLAGS.annotations_dir)
+  examples_path = os.path.join(data_dir,'set',FLAGS.set + '.txt')
+  annotations_dir = os.path.join(data_dir,FLAGS.annotations_dir)
   examples_list = dataset_util.read_examples_list(examples_path)
   for idx, example in enumerate(examples_list):
      if idx % 100 == 0:
